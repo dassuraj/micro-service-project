@@ -1,14 +1,12 @@
 package com.web.microservice.userservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Rating {
     private String ratingId;
     private Long userId;
