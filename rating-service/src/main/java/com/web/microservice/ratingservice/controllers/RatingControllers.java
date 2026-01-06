@@ -19,7 +19,6 @@ public class RatingControllers {
     //TODO: CREATE RATING
     @PostMapping
     public ResponseEntity<Rating> createRating(@RequestBody Rating rating){
-
         return ResponseEntity.status(HttpStatus.CREATED).body(ratingService.create(rating));
     }
 
@@ -39,7 +38,6 @@ public class RatingControllers {
     //TODO: GET ALL RATING BY HOTEL-ID
     @GetMapping("/hotels/{hotelId}")
     public ResponseEntity<?> getAllRatingByHotelId(@PathVariable String hotelId){
-
         return ResponseEntity.ok(ratingService.findRatingByHotelId(hotelId));
     }
 
