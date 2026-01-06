@@ -4,6 +4,7 @@ import com.web.microservice.userservice.entity.User;
 import com.web.microservice.userservice.exception.DuplicateResourceFoundException;
 import com.web.microservice.userservice.exception.InvalidDataException;
 import com.web.microservice.userservice.exception.ResourceNotFoundException;
+import com.web.microservice.userservice.external.service.HotelService;
 import com.web.microservice.userservice.model.Hotel;
 import com.web.microservice.userservice.model.Rating;
 import com.web.microservice.userservice.repository.UserRepository;
@@ -26,6 +27,8 @@ public class UserServiceImpl implements UserService {
 
     //TODO: DEPENDENCY-INJECTION USING CONSTRUCTOR
     private final UserRepository userRepository;
+
+    private final HotelService hotelService;
 
     private final RestTemplate restTemplate;
 
@@ -71,6 +74,8 @@ public class UserServiceImpl implements UserService {
     }
 
     //TODO: FIND USER BY ID
+    //TODO: USE OF REST TEMPLATE FOR FETCHING SERVICE DATA
+    /*
     @Override
     public User findById(Long id) {
         User user = userRepository.findById(id)
@@ -97,6 +102,37 @@ public class UserServiceImpl implements UserService {
 
           //return the rating
           return rating;
+        }).collect(Collectors.toList()) ;
+        user.setRatings(ratingList);
+
+        return user;
+
+    }*/
+
+    //TODO: FIND USER BY ID
+    //TODO: USE OF FEIGN CLIENT FOR FETCHING SERVICE DATA
+    @Override
+    public User findById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(()->
+                        new ResourceNotFoundException("user","id",id));
+
+
+        Rating[] ratingsOfUsers = restTemplate.getForObject("http://RATING-SERVICE/rating/users/"+user.getId(),Rating[].class);
+
+        List<Rating>  ratings = Arrays.stream(ratingsOfUsers).toList();
+
+        List<Rating> ratingList = ratings.stream().map(rating->{
+
+
+           //TODO: USE OF FEIGN CLIENT AS HOTEL-SERVICE
+            Hotel hotel = hotelService.getHotel(rating.getHotelId());
+
+            //set the hotel to rating
+            rating.setHotel(hotel);
+
+            //return the rating
+            return rating;
         }).collect(Collectors.toList()) ;
         user.setRatings(ratingList);
 
