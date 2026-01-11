@@ -1,0 +1,15 @@
+
+server:
+  port: 8085
+
+
+spring:
+  application:
+    name: MICRO-SERVICE-CONFIG-SERVER
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/dassuraj/micro-service-configuration-file
+          clone-on-start: true
+
